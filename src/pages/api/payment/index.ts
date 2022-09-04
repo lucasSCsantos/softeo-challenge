@@ -32,8 +32,7 @@ async function payment(req: NextApiRequest, res: NextApiResponse) {
       pacientId = response.data[0] ? response.data[0].id : undefined;
     }
 
-    console.log(procedureId, pacientId);
-    const a = await supabase.from('payments').insert([
+    await supabase.from('payments').insert([
       {
         amount,
         installment,
@@ -42,7 +41,7 @@ async function payment(req: NextApiRequest, res: NextApiResponse) {
         pacient: pacientId || null
       }
     ]);
-    console.log(a);
+
     res.status(201).json({});
   }
 }
