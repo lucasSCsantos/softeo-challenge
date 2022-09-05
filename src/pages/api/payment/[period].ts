@@ -1,26 +1,42 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import supabase from '../../../lib/supabase';
 
-export type Period = 'day' | 'month' | 'year';
+// export type Period = 'day' | 'month' | 'year';
+
+enum Period {
+  day = 'day',
+  month = 'month',
+  year = 'year'
+}
+
+export interface Body {
+  startDate: string;
+  endDate: string;
+}
 
 async function getByPeriod(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     const { period } = req.query;
+    const { startDate, endDate }: Body = req.body;
 
-    if (period !== ('day' || 'month' || 'year')) {
-      throw new Error(
-        'This period does not exist. To get other period try GET custom period!'
-      );
+    let start: Moment;
+    let end: Moment;
+
+    if (period === 'custom') {
+      start = moment(new Date(startDate)).utc().startOf('day');
+      end = moment(new Date(endDate)).utc().endOf('day');
+    } else if (Period[`${period}`]) {
+      start = moment()
+        .utc()
+        .startOf(period as Period);
+
+      end = moment()
+        .utc()
+        .endOf(period as Period);
+    } else {
+      throw new Error('This period is not valid!');
     }
-
-    const start = moment()
-      .utc()
-      .startOf(period as Period);
-
-    const end = moment()
-      .utc()
-      .endOf(period as Period);
 
     const { data, error } = await supabase
       .from('payments')
