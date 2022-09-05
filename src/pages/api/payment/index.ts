@@ -1,36 +1,22 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import checkOrInsertData from '../../../helpers/checkOrInsertData';
 import supabase from '../../../lib/supabase';
 
 async function payment(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { amount, installment, date, procedure, pacient } = req.body;
-    let procedureId: undefined | string;
-    let pacientId: undefined | string;
 
-    if (procedure) {
-      const response = await supabase
-        .from('procedures')
-        .insert([
-          {
-            procedure
-          }
-        ])
-        .select('id');
-      procedureId = response.data[0] ? response.data[0].id : undefined;
-    }
+    const procedureId: undefined | string = await checkOrInsertData(
+      procedure,
+      'procedures',
+      'procedure'
+    );
 
-    if (pacient) {
-      const response = await supabase
-        .from('pacients')
-        .insert([
-          {
-            pacient
-          }
-        ])
-        .select('id');
-
-      pacientId = response.data[0] ? response.data[0].id : undefined;
-    }
+    const pacientId: undefined | string = await checkOrInsertData(
+      pacient,
+      'pacients',
+      'pacient'
+    );
 
     await supabase.from('payments').insert([
       {
@@ -43,6 +29,12 @@ async function payment(req: NextApiRequest, res: NextApiResponse) {
     ]);
 
     res.status(201).json({});
+  } else if (req.method === 'GET') {
+    const response = await supabase
+      .from('payments')
+      .select('*, procedure(procedure), pacient(pacient)');
+
+    res.status(200).json(response.data);
   }
 }
 
