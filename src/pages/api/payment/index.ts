@@ -2,10 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import moment from 'moment';
 import checkOrInsertData from '../../../helpers/checkOrInsertData';
 import supabase from '../../../lib/supabase';
+import getInstallmentAmount from '../../../helpers/getInstallmentAmount';
 
 export interface Body {
   amount: number;
-  installment: number;
+  installments: number;
   date: string;
   procedure: string;
   pacient: string;
@@ -13,9 +14,11 @@ export interface Body {
 
 async function payment(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { amount, installment, date, procedure, pacient }: Body = req.body;
+    const { amount, installments, date, procedure, pacient }: Body = req.body;
 
     const today = moment().startOf('day').hour(-3).toDate();
+
+    const installmentAmount = getInstallmentAmount(amount, installments);
 
     const procedureId: undefined | string = await checkOrInsertData(
       procedure,
@@ -29,17 +32,25 @@ async function payment(req: NextApiRequest, res: NextApiResponse) {
       'pacient'
     );
 
-    await supabase.from('payments').insert([
-      {
-        amount,
-        installment,
-        date: date || today,
-        procedure: procedureId || null,
-        pacient: pacientId || null
-      }
-    ]);
+    const { data, error } = await supabase
+      .from('payments')
+      .insert([
+        {
+          amount,
+          installments,
+          date: date || today,
+          procedure: procedureId || null,
+          pacient: pacientId || null,
+          installment_amount: installmentAmount
+        }
+      ])
+      .select('*');
 
-    res.status(201).json({});
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    res.status(201).json(data);
   } else if (req.method === 'GET') {
     const response = await supabase
       .from('payments')
