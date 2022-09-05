@@ -1,14 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import moment, { Moment } from 'moment';
+import { Moment } from 'moment';
 import supabase from '../../../lib/supabase';
-
-// export type Period = 'day' | 'month' | 'year';
-
-enum Period {
-  day = 'day',
-  month = 'month',
-  year = 'year'
-}
+import { endOfDate, Period, startOfDate } from '../../../helpers/processDate';
 
 export interface Body {
   startDate: string;
@@ -20,21 +13,10 @@ async function getByPeriod(req: NextApiRequest, res: NextApiResponse) {
     const { period } = req.query;
     const { startDate, endDate }: Body = req.body;
 
-    let start: Moment;
-    let end: Moment;
+    const start: Moment = startOfDate(new Date(startDate), period as Period);
+    const end: Moment = endOfDate(new Date(endDate), period as Period);
 
-    if (period === 'custom') {
-      start = moment(new Date(startDate)).utc().startOf('day');
-      end = moment(new Date(endDate)).utc().endOf('day');
-    } else if (Period[`${period}`]) {
-      start = moment()
-        .utc()
-        .startOf(period as Period);
-
-      end = moment()
-        .utc()
-        .endOf(period as Period);
-    } else {
+    if (!start && !end) {
       throw new Error('This period is not valid!');
     }
 
