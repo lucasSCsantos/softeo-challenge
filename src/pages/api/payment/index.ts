@@ -3,9 +3,18 @@ import moment from 'moment';
 import checkOrInsertData from '../../../helpers/checkOrInsertData';
 import supabase from '../../../lib/supabase';
 
+export interface RequestBody {
+  amount: number;
+  installment: number;
+  date: string;
+  procedure: string;
+  pacient: string;
+}
+
 async function payment(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { amount, installment, date, procedure, pacient } = req.body;
+    const { amount, installment, date, procedure, pacient }: RequestBody =
+      req.body;
 
     const today = moment().startOf('day').hour(-3).toDate();
 
