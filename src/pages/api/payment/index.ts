@@ -1,10 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import moment from 'moment';
 import checkOrInsertData from '../../../helpers/checkOrInsertData';
 import supabase from '../../../lib/supabase';
 
 async function payment(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { amount, installment, date, procedure, pacient } = req.body;
+
+    const today = moment().startOf('day').hour(-3).toDate();
 
     const procedureId: undefined | string = await checkOrInsertData(
       procedure,
@@ -22,7 +25,7 @@ async function payment(req: NextApiRequest, res: NextApiResponse) {
       {
         amount,
         installment,
-        date,
+        date: date || today,
         procedure: procedureId || null,
         pacient: pacientId || null
       }
