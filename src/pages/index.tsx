@@ -9,9 +9,7 @@ export default function Home() {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      <main>
-        <h1>Olá mundo</h1>
-      </main>
+      <main />
     </div>
   );
 }
