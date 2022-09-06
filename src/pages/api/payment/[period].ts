@@ -24,7 +24,7 @@ async function getByPeriod(req: NextApiRequest, res: NextApiResponse) {
 
     const { data, error } = await supabase
       .from('payments')
-      .select('*')
+      .select('*, procedure(procedure), pacient(pacient)')
       .or(
         `and(startDate.gte.${start},startDate.lte.${end}),and(endDate.gte.${start},endDate.lte.${end})`
       );
