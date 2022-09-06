@@ -16,7 +16,8 @@ export interface Payment {
   pacient: string;
   installments: number;
   amount: number;
-  date: Date;
+  startDate: Date;
+  endDate: Date;
   installment_amount: number;
   created_at: Date;
 }

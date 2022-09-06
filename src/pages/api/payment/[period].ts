@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+// import { Moment } from 'moment';
 import { Moment } from 'moment';
 import supabase from '../../../lib/supabase';
 import { endOfDate, Period, startOfDate } from '../../../helpers/processDate';
+import calcaulatePeriodData from '../../../helpers/calcaulatePeriodData';
 
 export interface Body {
   startDate: string;
@@ -23,14 +25,17 @@ async function getByPeriod(req: NextApiRequest, res: NextApiResponse) {
     const { data, error } = await supabase
       .from('payments')
       .select('*')
-      .gt('date', start)
-      .lt('date', end);
+      .or(
+        `and(startDate.gte.${start},startDate.lte.${end}),and(endDate.gte.${start},endDate.lte.${end})`
+      );
 
     if (error) {
       throw new Error(error.message);
     }
 
-    res.status(201).json(data);
+    const periodData = await calcaulatePeriodData(data, period as string);
+
+    res.status(201).json(periodData);
   }
 }
 
