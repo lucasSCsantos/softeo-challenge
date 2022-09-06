@@ -10,15 +10,16 @@ export type Pacient = {
   created_at: Date;
 };
 
-export type Payment = {
+export interface Payment {
   id: string;
   procedure: string;
   pacient: string;
-  installment: number;
+  installments: number;
   amount: number;
   date: Date;
+  installment_amount: number;
   created_at: Date;
-};
+}
 
 export interface Database {
   public: {
