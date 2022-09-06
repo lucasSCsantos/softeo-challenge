@@ -1,30 +1,30 @@
-import { Badge, Card, Col, Container, Row } from 'react-bootstrap';
-import { IncomeCardContainer } from './styles';
+import { Card, Col, Container, Row } from 'react-bootstrap';
+import { Payment } from '../../@types/supabase';
+import { IncomeCardContainer, IncomeCardLabel } from './styles';
 
 export interface IncomeCardProps {
   data: {
     period: string;
     income: string;
-    // variation: number;
+    data: Payment[];
   };
 }
-
 export default function IncomeCard({ data }: IncomeCardProps) {
   return (
     <IncomeCardContainer>
       <Card.Body>
         <Container>
-          <p>{data.period} income</p>
+          <IncomeCardLabel>{data.period} income</IncomeCardLabel>
           <Row>
             <Col>
-              <h1>{data.income}</h1>
+              <h2>{data.income}</h2>
             </Col>
-            <Col>
+            {/* <Col>
               <Badge>
-                {/* {data.variation > 0 ? '+' : '-'}
-                {data.variation}% */}
+                {data.variation > 0 ? '+' : '-'}
+                {data.variation}%
               </Badge>
-            </Col>
+            </Col> */}
           </Row>
         </Container>
       </Card.Body>

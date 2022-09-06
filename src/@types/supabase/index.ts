@@ -12,8 +12,8 @@ export type Pacient = {
 
 export interface Payment {
   id: string;
-  procedure: string;
-  pacient: string;
+  procedure: { procedure: string };
+  pacient: { pacient: string };
   installments: number;
   amount: number;
   startDate: Date;

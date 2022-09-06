@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import axios from 'axios';
+import { Col, Row } from 'react-bootstrap';
 import IncomeCard from '../components/IncomeCard';
+import { MainContainer } from '../styles';
 
 export default function Home({ day, month, year }) {
   return (
@@ -11,11 +13,19 @@ export default function Home({ day, month, year }) {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      <main>
-        <IncomeCard data={day} />
-        <IncomeCard data={month} />
-        <IncomeCard data={year} />
-      </main>
+      <MainContainer>
+        <Row>
+          <Col>
+            <IncomeCard data={day} />
+          </Col>
+          <Col>
+            <IncomeCard data={month} />
+          </Col>
+          <Col>
+            <IncomeCard data={year} />
+          </Col>
+        </Row>
+      </MainContainer>
     </div>
   );
 }
