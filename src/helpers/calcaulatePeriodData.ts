@@ -75,8 +75,9 @@ export default async (
   const currencyData = currency(periodAmount, { symbol: 'R$' });
 
   return {
-    income: currencyData.format(),
+    period,
+    currency: currencyData.format(),
     amount: currencyData.value,
-    data: data.length
+    data
   };
 };
