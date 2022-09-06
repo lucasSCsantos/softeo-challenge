@@ -16,7 +16,7 @@ export const startOfDate = (
 
   if (Period[`${period}`]) {
     return moment()
-      .utc()
+      .utc(true)
       .startOf(period as Period);
   }
 
@@ -30,7 +30,7 @@ export const endOfDate = (date: Date | undefined, period: string) => {
 
   if (Period[`${period}`]) {
     return moment()
-      .utc()
+      .utc(true)
       .endOf(period as Period);
   }
 
