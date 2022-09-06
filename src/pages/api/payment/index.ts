@@ -3,6 +3,7 @@ import moment from 'moment';
 import checkOrInsertData from '../../../helpers/checkOrInsertData';
 import supabase from '../../../lib/supabase';
 import getInstallmentAmount from '../../../helpers/getInstallmentAmount';
+import getEndDate from '../../../helpers/getEndDate';
 
 export interface Body {
   amount: number;
@@ -16,9 +17,10 @@ async function payment(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { amount, installments, date, procedure, pacient }: Body = req.body;
 
-    const today = moment().startOf('day').hour(-3).toDate();
-
+    const today = moment().utc(true).startOf('day');
+    const installment = installments > 1;
     const installmentAmount = getInstallmentAmount(amount, installments);
+    const endDate = installment && getEndDate(date, installments);
 
     const procedureId: undefined | string = await checkOrInsertData(
       procedure,
@@ -38,7 +40,8 @@ async function payment(req: NextApiRequest, res: NextApiResponse) {
         {
           amount,
           installments,
-          date: date || today,
+          startDate: date || today,
+          endDate: installment ? endDate : null,
           procedure: procedureId || null,
           pacient: pacientId || null,
           installment_amount: installmentAmount
