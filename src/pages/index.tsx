@@ -4,6 +4,7 @@ import { Col, Row } from 'react-bootstrap';
 import IncomeCard from '../components/IncomeCard';
 import { MainContainer } from '../styles';
 import { GetPeriodResponse } from '../@types/api';
+import PaymentForm from '../components/PaymentForm';
 
 export interface IncomeCardProps {
   [key: string]: GetPeriodResponse;
@@ -28,7 +29,7 @@ export default function Home({ day, month, year }) {
         </Row>
         <Row className="mt-3">
           <Col>
-            <IncomeCard data={day} />
+            <PaymentForm />
           </Col>
           <Col>
             <IncomeCard data={month} />
