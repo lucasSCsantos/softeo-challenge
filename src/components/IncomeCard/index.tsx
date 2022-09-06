@@ -9,6 +9,7 @@ export interface IncomeCardProps {
     data: Payment[];
   };
 }
+
 export default function IncomeCard({ data }: IncomeCardProps) {
   return (
     <IncomeCardContainer>
