@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-// import { Moment } from 'moment';
 import { Moment } from 'moment';
 import supabase from '../../../lib/supabase';
 import { endOfDate, Period, startOfDate } from '../../../helpers/processDate';
@@ -24,7 +23,7 @@ async function getByPeriod(req: NextApiRequest, res: NextApiResponse) {
 
     const { data, error } = await supabase
       .from('payments')
-      .select('*')
+      .select('*, procedure(procedure), pacient(pacient)')
       .or(
         `and(startDate.gte.${start},startDate.lte.${end}),and(endDate.gte.${start},endDate.lte.${end})`
       );
@@ -40,7 +39,7 @@ async function getByPeriod(req: NextApiRequest, res: NextApiResponse) {
       end
     );
 
-    res.status(201).json(periodData);
+    res.status(200).json(periodData);
   }
 }
 
