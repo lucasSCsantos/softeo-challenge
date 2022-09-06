@@ -33,7 +33,12 @@ async function getByPeriod(req: NextApiRequest, res: NextApiResponse) {
       throw new Error(error.message);
     }
 
-    const periodData = await calcaulatePeriodData(data, period as string);
+    const periodData = await calcaulatePeriodData(
+      data,
+      period as string,
+      start,
+      end
+    );
 
     res.status(201).json(periodData);
   }
