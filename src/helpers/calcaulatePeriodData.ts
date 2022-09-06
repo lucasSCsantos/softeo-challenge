@@ -73,10 +73,11 @@ export default async (
   });
 
   const currencyData = currency(periodAmount, { symbol: 'R$' });
+  const income = currencyData.format();
 
   return {
     period,
-    currency: currencyData.format(),
+    income,
     amount: currencyData.value,
     data
   };

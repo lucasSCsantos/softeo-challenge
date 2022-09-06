@@ -40,7 +40,7 @@ async function getByPeriod(req: NextApiRequest, res: NextApiResponse) {
       end
     );
 
-    res.status(201).json(periodData);
+    res.status(200).json(periodData);
   }
 }
 
